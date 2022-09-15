@@ -45,11 +45,11 @@ def tracker(request):
                for item in update:
                     updates.append({'text':item.update_desc,'time':item.timestamp})
                     response=json.dump(updates,default=str)
-                    return HttpResponse (response)
+               return HttpResponse (response)
             else:
-               return HttpResponse ('Invalid Id Please Enter Valid Order Id or Email')
+               return HttpResponse ('{}')
         except Exception as e:
-            return HttpResponse ('Invalid Id Please Enter Valid Order Id or Email')
+            return HttpResponse ('{}')
     return render(request,'myproj/tracker.html')
 @login_required
 def search(request):
