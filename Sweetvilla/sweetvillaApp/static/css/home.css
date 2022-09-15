@@ -457,7 +457,7 @@
    .carousel-control-next,
    .carousel-control-prev {
        position: absolute;
-       top: 513px;
+       top: 440px;
        bottom: 0;
        z-index: 1;
        display: -ms-flexbox;
@@ -538,4 +538,10 @@
        background-color: rgb(250, 247, 247);
        font-weight: bold;
        position: relative;
+   }
+   
+   .btn1 {
+       color: #efe6ef;
+       border-color: #cb629b;
+       background-color: #e30f4e;
    }

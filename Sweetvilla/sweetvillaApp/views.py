@@ -1,10 +1,11 @@
+import json
 from math import ceil
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from.models import Order
+from.models import Order, OrderUpdate
 from sweetvillaApp.forms import feedbackform
-
-from sweetvillaApp .models import Product,Contact
+from sweetvillaApp .models import Product,Contact,OrderUpdate
+from django.http import HttpResponse
 def home(request):
     cake=Product.objects.filter(cetegory='cake')
     icecream=Product.objects.filter(cetegory='ice cream')
@@ -16,6 +17,7 @@ def home(request):
     international=Product.objects.filter(cetegory='internationalSweet')
     params={'cake':cake,'ic':icecream,'pb':punjabi,'bs':bengoli,'sauth':sauth,'ind':indian,'gj':gujrati,'inter':international }
     return render(request,'myproj/home.html',params)
+
 @login_required
 def about(request):
     return render(request,'myproj/aboutus.html')
@@ -32,6 +34,22 @@ def contact(request):
     return render(request,'myproj/contactus.html')
 @login_required
 def tracker(request):
+    if request.method=="POST":
+        orderId=request.POST.get('OrderId', '')
+        email=request.POST.get('email', '')
+        try:
+            order=Order.objects.filter(order_id=orderId,email=email)
+            if len(order)>0:
+               update=OrderUpdate.objects.filter(order_id=orderId)
+               updates=[]
+               for item in update:
+                    updates.append({'text':item.update_desc,'time':item.timestamp})
+                    response=json.dump(updates,default=str)
+                    return HttpResponse (response)
+            else:
+               return HttpResponse ('Invalid Id Please Enter Valid Order Id or Email')
+        except Exception as e:
+            return HttpResponse ('Invalid Id Please Enter Valid Order Id or Email')
     return render(request,'myproj/tracker.html')
 @login_required
 def search(request):
@@ -141,10 +159,12 @@ def checkout(request):
         order = Order(items_json= items_json, name=name, email=email, address= address, city=city, state=state, zip_code=zip_code, phone=phone)
         print(order)
         order.save()
+        update=OrderUpdate(order_id=order.order_id,update_desc='Your Order Has Been Placed')
+        update.save()
         thank=True
         id=order.order_id
         return render(request, 'myproj/checkout.html', {'thank':thank, 'id':id})
-    return render(request, 'mypro/checkout.html')
+    return render(request, 'myproj/checkout.html')
 
 #feadbck form
 
