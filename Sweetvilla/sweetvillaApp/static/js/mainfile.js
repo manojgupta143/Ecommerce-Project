@@ -71,3 +71,4 @@ $('.divpr').on("click", "button.plus", function() {
     document.getElementById('valpr' + a).innerHTML = cart['pr' + a][0];
     updateCart(cart);
 });
+console.log("helo world ", updateCart())
